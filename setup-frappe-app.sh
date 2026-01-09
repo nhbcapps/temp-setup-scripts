@@ -78,6 +78,27 @@ log "Executor: script=${SCRIPT_BASENAME} user=$(id -un) uid=$(id -u)"
 cd ~
 
 #############################################
+# MYSQL SECURE INSTALL & WKHTMLTOPDF
+#############################################
+log "Initializing the MySQL server setup (mariadb-secure-installation)"
+sudo mariadb-secure-installation <<MARIADB_EOF
+
+y
+y
+$FRAPPE_DB_PASSWORD
+$FRAPPE_DB_PASSWORD
+y
+y
+y
+y
+MARIADB_EOF
+
+log "Installing wkhtmltopdf and dependencies"
+sudo apt install -y xvfb libfontconfig
+wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+sudo dpkg -i wkhtmltox_0.12.6.1-2.jammy_amd64.deb || sudo apt install -y -f
+
+#############################################
 # NVM / NODE / YARN
 #############################################
 log "Installing NVM & Node"
