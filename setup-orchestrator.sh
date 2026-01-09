@@ -80,6 +80,12 @@ log "Completed root phase."
 
 # 2) User phase
 log "Running user phase as $FRAPPE_APP_USER: $USER_SCRIPT"
+# Ensure the user-phase script is executable and accessible
+if [[ ! -x "$USER_SCRIPT" ]]; then
+  chmod +x "$USER_SCRIPT"
+fi
+chown "$FRAPPE_APP_USER":"$FRAPPE_APP_USER" "$USER_SCRIPT" || true
+
 sudo -E -u "$FRAPPE_APP_USER" env \
   HOME="/home/$FRAPPE_APP_USER" \
   "$USER_SCRIPT" \
